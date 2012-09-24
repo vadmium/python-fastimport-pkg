@@ -1,38 +1,24 @@
 # Maintainer: Nuno Araujo <nuno.araujo at russo79.com>
-pkgname=python2-fastimport-bzr
+pkgname=python2-fastimport
 _realname=python-fastimport
-pkgver=298
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="Fastimport parser in Python"
 arch=(any)
 url="https://launchpad.net/python-fastimport"
 license=('GPL')
-depends=('python2' 'setuptools')
-makedepends=('bzr')
+provides=("$pkgname-bzr")
 
-_bzrtrunk=lp:$_realname
-_bzrmod=$_realname
+_rls="$_realname-$pkgver"
+source=(
+  "$url/trunk/$pkgver/+download/$_rls.tar.gz"
+  "$url/trunk/$pkgver/+download/$_rls.tar.gz.asc"
+)
+md5sums=(68972ad820785ec3247ec7bad0bfa6ea d7a1a696b6cd6e7a7a490dcc882a132f)
 
 build() {
-  cd $srcdir
-
-  msg "Connecting to the server...."
-
-  if [ -d $_bzrmod ]; then
-    bzr up $_bzrmod
-    msg "The local files are updated."
-  else
-    bzr co $_bzrtrunk $_bzrmod
-  fi
-
-  msg "BZR checkout done or server timeout"
-  msg "Starting make..."
-
-  rm -rf $_bzrmod-build
-  cp -r $_bzrmod $_bzrmod-build
-  cd $_bzrmod-build
-
-  /usr/bin/python2 setup.py install --root=$startdir/pkg
+  cd "$srcdir/$_rls"
+  python2 setup.py install --root="$pkgdir" --optimize=1
 }
 
 # vim:set ts=2 sw=2 et:
